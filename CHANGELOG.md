@@ -1,5 +1,13 @@
 # Migration Assistant Changelog
 
+## 3.2.9 - 2024-07-03
+
+- code split for Craft 3 vs Craft 4
+
+## 3.2.8 - 2023-02-02
+
+- doc updates
+
 ## 3.2.7 - 2021-11-19
 
 - fixed field layout issue with Neo fields
