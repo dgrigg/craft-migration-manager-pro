@@ -29,9 +29,8 @@ class LinkFieldExtension
                 $value->type = $linkType->name;
                                         
                 if (isset($value->linkedId) && !is_null($value->linkedId)) {
-                
-                $linkedElement = Craft::$app->elements->getElementById($value->linkedId, $linkType->elementType, $value->linkedSiteId );
-                $value->element = [ElementHelper::getSourceHandle($linkedElement)];
+                    $linkedElement = Craft::$app->elements->getElementById($value->linkedId, $linkType->elementType, $value->linkedSiteId );
+                    $value->element = [ElementHelper::getSourceHandle($linkedElement)];
                 } 
 
                 if (isset($value->linkedSiteId) && !is_null($value->linkedSiteId)) {

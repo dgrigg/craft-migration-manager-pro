@@ -2,6 +2,7 @@
 
 namespace dgrigg\migrationassistant\events;
 
+use dgrigg\migrationassistant\services\BaseContentMigration;
 use craft\base\Element;
 use yii\base\Event;
 use yii\base\Component;
@@ -26,10 +27,13 @@ class ExportEvent extends Event
      */
     public $value;
 
+
     /**
-     * @var Component|null The parent model associated with the element.
+     * @var BaseContentMigration|null The service performing the export.
      */
-    public $parent;
+    public $service;
+
+    
 
 
 }

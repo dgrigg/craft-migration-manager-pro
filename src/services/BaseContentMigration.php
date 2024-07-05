@@ -123,7 +123,8 @@ abstract class BaseContentMigration extends BaseMigration
     {
         $event = new ExportEvent(array(
             'element' => $element,
-            'value' => $data
+            'value' => $data,
+            'service' => $this
         ));
         $this->trigger($this::EVENT_BEFORE_EXPORT_FIELD_VALUE, $event);
         return $event->value;
@@ -132,7 +133,7 @@ abstract class BaseContentMigration extends BaseMigration
     /**
      * @param $values
      */
-    protected function validateImportValues(&$values, $context = 'global')
+    public function validateImportValues(&$values, $context = 'global')
     {
         foreach ($values as $key => &$value) {
             $this->validateFieldValue($values, $key, $value, $context);
@@ -218,7 +219,8 @@ abstract class BaseContentMigration extends BaseMigration
     {
         $event = new ImportEvent(array(
             'element' => $element,
-            'value' => $data
+            'value' => $data,
+            'service' => $this
         ));
         $this->trigger($this::EVENT_BEFORE_IMPORT_FIELD_VALUE, $event);
         return $event->value;
@@ -246,9 +248,8 @@ abstract class BaseContentMigration extends BaseMigration
      * @param $settingsFunc
      * @return array
      */
-    protected function getIteratorValues($element, $settingsFunc)
+    public function getIteratorValues($element, $settingsFunc)
     {
-        //$items = $element->getIterator();
         $items = $element->all();
         $value = [];
         $i = 1;

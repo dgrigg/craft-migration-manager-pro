@@ -23,10 +23,11 @@ class ImportEvent extends CancelableEvent
      */
     public $value;
 
+
     /**
-     * @var Component|null The parent element associated with the element.
+     * @var BaseContentMigration|null The service performing the import.
      */
-    public $parent;
+    public $service;
 
     /**
      * @var String|null the reason the event was cancelled
