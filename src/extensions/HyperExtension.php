@@ -59,8 +59,8 @@ class HyperExtension
                 foreach($values as $key => $value) {
                     if (key_exists('element', $value)){
                         $ids =  ElementHelper::populateIds($value['element']);
-                        $linkValue['linkValue'] = $ids[0];
-                        unset($linkValue['element']);
+                        $value['linkValue'] = $ids[0];
+                        unset($value['element']);
                     }
 
                     if (key_exists('fields', $value)){
@@ -68,7 +68,9 @@ class HyperExtension
                     }
 
                     $values[$key] = $value;
+                   
                 }
+                
                 $event->value = $values;           
             }
         });

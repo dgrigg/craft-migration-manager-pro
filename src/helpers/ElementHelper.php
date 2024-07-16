@@ -422,12 +422,10 @@ class ElementHelper
                 }
 
                 if ($func){
-
-                    $item = $func( $element );
+                    $item = $func( $element );                  
                     if ($item)
                     {
                         $ids[] = $item->id;
-                        
                     }
                 }
             }
