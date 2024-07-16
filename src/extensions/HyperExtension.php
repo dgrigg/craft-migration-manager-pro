@@ -69,7 +69,6 @@ class HyperExtension
 
                     $values[$key] = $value;
                 }
-                Craft::error($values, __METHOD__);
                 $event->value = $values;           
             }
         });
