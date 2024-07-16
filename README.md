@@ -91,6 +91,7 @@ In addition it also supports:
 - [SuperTable](https://github.com/engram-design/SuperTable)
 - [Neo](https://github.com/spicywebau/craft-neo)
 - [LinkField](https://github.com/sebastian-lenz/craft-linkfield)
+- [Hyper](https://github.com/verbb/hyper)
 
 ### Additional Field Support
 

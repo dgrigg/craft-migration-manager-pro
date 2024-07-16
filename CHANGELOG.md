@@ -1,5 +1,11 @@
 # Migration Assistant Changelog
 
+## 4.0.1 - 2024-07-16 
+
+### Added 
+
+- Verbb Hyper field support 
+
 ## 4.0.0 - 2024-06-17
 
 - Craft 4 compatible release
