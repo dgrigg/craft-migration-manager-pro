@@ -1,5 +1,11 @@
 # Migration Assistant Changelog
 
+## 5.0.0 - 2024-07-17
+
+### Added
+
+- Craft 5 support
+
 ## 4.0.1 - 2024-07-16 
 
 ### Added 

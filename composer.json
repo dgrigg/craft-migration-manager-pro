@@ -1,7 +1,7 @@
 {
   "name": "dgrigg/craft-migration-assistant",
   "description": "Create content migrations at the click of a mouse. Keep environments in sync with ease.",
-  "version": "4.0.1",
+  "version": "5.0.0",
   "keywords": [
     "craft",
     "cms",
@@ -24,7 +24,7 @@
   "license": "proprietary",
   "type": "craft-plugin",
   "require": {
-    "craftcms/cms": "^4.0.0-alpha"
+    "craftcms/cms": "^5.0.0"
   },
   "autoload": {
     "psr-4": {

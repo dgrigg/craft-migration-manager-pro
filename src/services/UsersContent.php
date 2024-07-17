@@ -74,7 +74,7 @@ class UsersContent extends BaseContentMigration
 
         if ($user) {
             $data['id'] = $user->id;
-            $data['contentId'] = $user->contentId;
+            //$data['contentId'] = $user->contentId;
 
             $userState['active'] = $user->active;
             $userState['pending'] = $user->pending;

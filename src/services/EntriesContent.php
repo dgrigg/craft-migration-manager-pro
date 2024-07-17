@@ -152,7 +152,7 @@ class EntriesContent extends BaseContentMigration
             $entry->id = $data['id'];
         }
 
-        $section = Craft::$app->sections->getSectionByHandle($data['section']);
+        $section = Craft::$app->entries->getSectionByHandle($data['section']);
         $entry->sectionId = $section->id;
 
         $entryType = $this->getEntryType($data['entryType'], $entry->sectionId);
@@ -194,12 +194,12 @@ class EntriesContent extends BaseContentMigration
         $entry->title = $data['title'];
 
         //grab the content id for existing entries
-        if (!is_null($entry->id)){
-            $contentEntry = Craft::$app->entries->getEntryById($entry->id, $entry->siteId);
-            if ($contentEntry) {
-                $entry->contentId = $contentEntry->contentId;
-            }
-        }
+        // if (!is_null($entry->id)){
+        //     $contentEntry = Craft::$app->entries->getEntryById($entry->id, $entry->siteId);
+        //     if ($contentEntry) {
+        //         $entry->contentId = $contentEntry->contentId;
+        //     }
+        // }
 
         return $entry;
     }

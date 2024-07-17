@@ -25,7 +25,7 @@ abstract class BaseContentMigration extends BaseMigration
         }
     }
 
-    /**
+    /** 
      * @param $content
      * @param $fieldModel
      * @param $parent
@@ -34,7 +34,7 @@ abstract class BaseContentMigration extends BaseMigration
     public function getFieldContent(&$content, $fieldModel, $parent)
     {
         $field = $fieldModel;
-        $value = $parent->getFieldValue($field->handle);
+        $value = $parent->getFieldValue($field->handle); 
 
         switch ($field->className()) {
             case 'craft\redactor\Field':
@@ -54,7 +54,10 @@ abstract class BaseContentMigration extends BaseMigration
                         'type' => $itemType->handle,
                         'enabled' => $item->enabled,
                         'sortOrder' => $item->sortOrder,
-                        'fields' => []
+                        'title' => $item->title,
+                        'slug' => $item->slug,
+                        'collapsed' => $item->collapsed,
+                        'fields' => []                        
                     ];
 
                     return $value;
@@ -107,6 +110,14 @@ abstract class BaseContentMigration extends BaseMigration
 
         //export the field value
         $value = $this->onBeforeExportFieldValue($field, $value);
+
+        if (is_array($value) == false && is_object($value) == false){
+            $value = [
+                'value' => $value
+            ];
+        }
+        //set the field context
+        $value['context'] = $field->context;        
         $content[$field->handle] = $value;
     }
 
@@ -133,10 +144,10 @@ abstract class BaseContentMigration extends BaseMigration
     /**
      * @param $values
      */
-    public function validateImportValues(&$values, $context = 'global')
+    public function validateImportValues(&$values)
     {
         foreach ($values as $key => &$value) {
-            $this->validateFieldValue($values, $key, $value, $context);
+            $this->validateFieldValue($values, $key, $value);
         }
     }
 
@@ -148,13 +159,15 @@ abstract class BaseContentMigration extends BaseMigration
      * @param $fieldValue - value in field
      */
 
-    protected function validateFieldValue($parent, $fieldHandle, &$fieldValue, $context)
+    protected function validateFieldValue($parent, $fieldHandle, &$fieldValue)
     {
+        $field = Craft::$app->fields->getFieldByHandle($fieldHandle, $fieldValue['context']);
 
-        $field = Craft::$app->fields->getFieldByHandle($fieldHandle, $context);
         if ($field) {
+            //remove the context value
+            unset($fieldValue['context']);
+
             if ($field instanceof BaseRelationField) {
-               
                 if (is_array($fieldValue)){
                     ElementHelper::populateIds($fieldValue);
                 } else {
@@ -165,7 +178,7 @@ abstract class BaseContentMigration extends BaseMigration
                 switch ($field::class) {
                     case 'craft\fields\Matrix':
                         foreach ($fieldValue as $key => &$matrixBlock) {
-                            $blockType = ElementHelper::getMatrixBlockType($matrixBlock['type'], $field->id);
+                            $blockType =  Craft::$app->entries->getEntryTypeByHandle($matrixBlock['type']);
                             if ($blockType) {
                                 $blockFields = Craft::$app->fields->getAllFields('matrixBlockType:' . $blockType->id);
                                 foreach ($blockFields as &$blockField) {
@@ -201,9 +214,15 @@ abstract class BaseContentMigration extends BaseMigration
                         break;
                 }
             }
+
+            //pull back the value            
+            if (key_exists('value', $fieldValue)){
+                $fieldValue = $fieldValue['value'];
+            }
+
             $value = $this->onBeforeImportFieldValue($field, $fieldValue);
             $fieldValue = $value;
-        }
+        } 
     }
 
     /**
@@ -278,7 +297,7 @@ abstract class BaseContentMigration extends BaseMigration
      */
     protected function getEntryType($handle, $sectionId)
     {
-        $entryTypes = Craft::$app->sections->getEntryTypesBySectionId($sectionId);
+        $entryTypes = Craft::$app->entries->getEntryTypesBySectionId($sectionId);
         foreach ($entryTypes as $entryType) {
             if ($entryType->handle == $handle) {
                 return $entryType;

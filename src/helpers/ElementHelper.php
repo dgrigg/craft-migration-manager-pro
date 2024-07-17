@@ -28,14 +28,8 @@ class ElementHelper
      */
     public static function getMatrixBlockType($handle, $fieldId)
     {
-        $blockTypes = Craft::$app->matrix->getBlockTypesByFieldId($fieldId);
-        foreach ($blockTypes as $block) {
-            if ($block->handle == $handle) {
-                return $block;
-            }
-        }
-
-        return false;
+        $entryType =  Craft::$app->entries->getEntryTypeByHandle($handle);
+        return $entryType;
     }
 
     /**
@@ -146,7 +140,7 @@ class ElementHelper
      */
     public static function getEntryByHandle($element)
     {
-        $section = Craft::$app->sections->getSectionByHandle($element['section']);
+        $section = Craft::$app->entries->getSectionByHandle($element['section']);
         if ($section) {
             $query = Entry::find();
             $query->sectionId($section->id);
@@ -223,7 +217,7 @@ class ElementHelper
                 $element = null;
 
                 if (preg_match('/entries|entrydrafts/', $permissionParts[0])) {
-                    $element = Craft::$app->sections->getSectionByHandle($permissionParts[1]);
+                    $element = Craft::$app->entries->getSectionByHandle($permissionParts[1]);
                 } elseif (preg_match('/volume/', $permissionParts[0])) {
                     $element = Craft::$app->volumes->getVolumeByHandle($permissionParts[1]);
                 } elseif (preg_match('/categories/', $permissionParts[0])) {
@@ -257,7 +251,7 @@ class ElementHelper
                 $element = null;
 
                 if (preg_match('/entries|entrydrafts/', $permissionParts[0])) {
-                    $element = Craft::$app->sections->getSectionByUid($permissionParts[1]);
+                    $element = Craft::$app->entries->getSectionByUid($permissionParts[1]);
                 } elseif (preg_match('/volume/', $permissionParts[0])) {
                     $element = Craft::$app->volumes->getVolumeByUid($permissionParts[1]);
                 } elseif (preg_match('/categories/', $permissionParts[0])) {

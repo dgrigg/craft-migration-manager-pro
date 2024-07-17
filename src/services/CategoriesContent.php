@@ -154,12 +154,12 @@ class CategoriesContent extends BaseContentMigration
         }
 
         //grab the content id for existing category
-        if (!is_null($category->id)){
-            $contentCategory = Craft::$app->categories->getCategoryById($category->id, $category->siteId);
-            if ($contentCategory) {
-                $category->contentId = $contentCategory->contentId;
-            }
-        }
+        // if (!is_null($category->id)){
+        //     $contentCategory = Craft::$app->categories->getCategoryById($category->id, $category->siteId);
+        //     if ($contentCategory) {
+        //         $category->contentId = $contentCategory->contentId;
+        //     }
+        // }
 
         return $category;
     }
