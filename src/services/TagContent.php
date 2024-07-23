@@ -41,7 +41,7 @@ class TagContent extends BaseContentMigration
             $tag = $this->createModel($data);
 
             $fields = array_key_exists('fields', $data) ? $data['fields'] : [];
-            $this->validateImportValues($fields);
+            $this->validateImportValues($fields, $tag->id);
             $tag->setFieldValues($fields);
             $data['fields'] = $fields;
             $event = $this->onBeforeImport($tag, $data);

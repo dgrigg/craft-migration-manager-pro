@@ -30,6 +30,11 @@ class ImportEvent extends CancelableEvent
     public $service;
 
     /**
+     * @var int|null the id of the owner/parent element
+     */
+    public $ownerId;
+
+    /**
      * @var String|null the reason the event was cancelled
      */
     public $error;

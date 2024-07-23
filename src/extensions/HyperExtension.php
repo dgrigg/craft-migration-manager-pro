@@ -13,9 +13,6 @@ use verbb\hyper\fields\Hyper;
 use verbb\hyper\base\ElementLink;
 use craft\helpers\ArrayHelper;
 
-/**
- * Class LinkFieldHelper
- */
 class HyperExtension
 {
  
@@ -53,7 +50,6 @@ class HyperExtension
             
             if ($element->className() == 'verbb\hyper\fields\HyperField') {
                 $values = $event->value;
-                
                 $service = $event->service;
 
                 foreach($values as $key => $value) {

@@ -106,11 +106,12 @@ class EntriesContent extends BaseContentMigration
               if ($siteEntry){
                 $value['id'] = $siteEntry->id;
               }
+
             }
 
             $entry = $this->createModel($value);
             $fields = array_key_exists('fields', $value) ? $value['fields'] : [];
-            $this->validateImportValues($fields);
+            $this->validateImportValues($fields, $entry->id);
             $entry->setFieldValues($fields);
             $value['fields'] = $fields;
             $event = $this->onBeforeImport($entry, $value);

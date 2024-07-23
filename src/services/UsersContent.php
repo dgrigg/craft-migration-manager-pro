@@ -74,8 +74,6 @@ class UsersContent extends BaseContentMigration
 
         if ($user) {
             $data['id'] = $user->id;
-            //$data['contentId'] = $user->contentId;
-
             $userState['active'] = $user->active;
             $userState['pending'] = $user->pending;
             $userState['locked'] = $user->locked;
@@ -90,13 +88,11 @@ class UsersContent extends BaseContentMigration
             }
         }
 
-        $this->validateImportValues($data);
+        $this->validateImportValues($data, $user->id);
 
         if (array_key_exists('fields', $data)) {
             $user->setFieldValues($data['fields']);
         }
-
-        
 
         $event = $this->onBeforeImport($user, $data);
         if ($event->isValid) {

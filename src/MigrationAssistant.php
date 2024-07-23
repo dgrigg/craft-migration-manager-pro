@@ -23,6 +23,7 @@ use dgrigg\migrationassistant\actions\MigrateUserElementAction;
 use dgrigg\migrationassistant\helpers\FileLog;
 use dgrigg\migrationassistant\extensions\LinkFieldExtension;
 use dgrigg\migrationassistant\extensions\HyperExtension;
+use dgrigg\migrationassistant\extensions\CKFieldExtension;
 
 
 /**
@@ -156,6 +157,7 @@ class MigrationAssistant extends Plugin
    {
       $linkFieldExtension = new LinkFieldExtension();
       $hyperExtension = new HyperExtension();
+      $ckExtension = new CKFieldExtension();
    }
 
 

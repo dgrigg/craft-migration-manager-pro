@@ -10,9 +10,7 @@ use dgrigg\migrationassistant\services\BaseMigration;
 use dgrigg\migrationassistant\services\BaseContentMigration;
 use dgrigg\migrationassistant\helpers\ElementHelper;
 
-/**
- * Class LinkFieldHelper
- */
+
 class LinkFieldExtension
 {
 

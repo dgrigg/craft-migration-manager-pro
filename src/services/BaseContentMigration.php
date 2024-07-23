@@ -5,12 +5,9 @@ namespace dgrigg\migrationassistant\services;
 use dgrigg\migrationassistant\helpers\ElementHelper;
 use dgrigg\migrationassistant\events\ExportEvent;
 use dgrigg\migrationassistant\events\ImportEvent;
-
 use Craft;
 use craft\fields\BaseOptionsField;
 use craft\fields\BaseRelationField;
-
-use Throwable;
 
 abstract class BaseContentMigration extends BaseMigration
 {
@@ -80,9 +77,7 @@ abstract class BaseContentMigration extends BaseMigration
                 });
                 break;
             case 'verbb\supertable\fields\SuperTableField':
-
                 $model = $parent[$field->handle];
-
                 $value = $this->getIteratorValues($model, function ($item) {
                     $value = [
                         'type' => $item->typeId,
@@ -96,8 +91,11 @@ abstract class BaseContentMigration extends BaseMigration
                 $value = $value->value;
                 break;
             case 'craft\fields\Color':
-                //need to make sure hex value goes a string
                 $value = (string)$value;
+                break;
+            case 'craft\fields\Addresses':
+                $addresses = $field->serializeValue($value, $parent );
+                $value = array_values($addresses);
                 break;
             default:
                 if ($field instanceof BaseRelationField) {
@@ -116,8 +114,14 @@ abstract class BaseContentMigration extends BaseMigration
                 'value' => $value
             ];
         }
-        //set the field context
-        $value['context'] = $field->context;        
+
+        if (is_object($value)) {
+            $value->context = $field->context; 
+        } else{
+            $value['context'] = $field->context; 
+        }
+
+        //set the field context              
         $content[$field->handle] = $value;
     }
 
@@ -144,10 +148,10 @@ abstract class BaseContentMigration extends BaseMigration
     /**
      * @param $values
      */
-    public function validateImportValues(&$values)
+    public function validateImportValues(&$values, $ownerId = false)
     {
         foreach ($values as $key => &$value) {
-            $this->validateFieldValue($values, $key, $value);
+            $this->validateFieldValue($values, $key, $value, $ownerId);
         }
     }
 
@@ -159,7 +163,7 @@ abstract class BaseContentMigration extends BaseMigration
      * @param $fieldValue - value in field
      */
 
-    protected function validateFieldValue($parent, $fieldHandle, &$fieldValue)
+    protected function validateFieldValue($parent, $fieldHandle, &$fieldValue, $ownerId)
     {
         $field = Craft::$app->fields->getFieldByHandle($fieldHandle, $fieldValue['context']);
 
@@ -187,7 +191,7 @@ abstract class BaseContentMigration extends BaseMigration
                                         $this->updateSupertableFieldValue($matrixBlockFieldValue, $blockField);
                                     }
                                 }
-                                $this->validateImportValues($matrixBlock['fields'], "matrixBlockType:{$blockType->uid}");
+                                $this->validateImportValues($matrixBlock['fields'], $ownerId);
                             }
                         }
                         break;
@@ -204,7 +208,7 @@ abstract class BaseContentMigration extends BaseMigration
                                         $this->updateSupertableFieldValue($neoBlockFieldValue, $neoBlockField);
                                     }
                                 }
-                                $this->validateImportValues($neoBlock['fields']);
+                                $this->validateImportValues($neoBlock['fields'], $ownerId);
                             }
                         }
                         break;
@@ -216,11 +220,11 @@ abstract class BaseContentMigration extends BaseMigration
             }
 
             //pull back the value            
-            if (key_exists('value', $fieldValue)){
+            if (is_array($fieldValue) && key_exists('value', $fieldValue)){
                 $fieldValue = $fieldValue['value'];
             }
 
-            $value = $this->onBeforeImportFieldValue($field, $fieldValue);
+            $value = $this->onBeforeImportFieldValue($field, $fieldValue, $ownerId);
             $fieldValue = $value;
         } 
     }
@@ -234,11 +238,12 @@ abstract class BaseContentMigration extends BaseMigration
      *
      * @return null
      */
-    public function onBeforeImportFieldValue($element, $data)
+    public function onBeforeImportFieldValue($element, $data, $ownerId = false)
     {
         $event = new ImportEvent(array(
             'element' => $element,
             'value' => $data,
+            'ownerId' => $ownerId,
             'service' => $this
         ));
         $this->trigger($this::EVENT_BEFORE_IMPORT_FIELD_VALUE, $event);
@@ -257,7 +262,7 @@ abstract class BaseContentMigration extends BaseMigration
             $blockType = $blockTypes[0];
             foreach ($fieldValue as $key => &$value) {
                 $value['type'] = $blockType->id;
-                $this->validateImportValues($value['fields'], "superTableBlockType:{$blockType->uid}");
+                $this->validateImportValues($value['fields']);
             }
         }
     }

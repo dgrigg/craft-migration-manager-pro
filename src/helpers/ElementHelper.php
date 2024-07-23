@@ -166,6 +166,39 @@ class ElementHelper
     /**
      * @param array $element
      *
+     * @return bool|BaseElementModel|null
+     * @throws Exception
+     */
+    public static function getChildEntryByHandle($element, $ownerId = false)
+    {
+        $entryType = Craft::$app->entries->getEntryTypeByHandle($element['type']);
+        if ($entryType) {
+            $query = Entry::find();
+            $query->typeId($entryType->id);
+            $query->slug($element['slug']);
+            if ($ownerId){
+                $query->ownerId($ownerId);
+            }
+            
+            if (array_key_exists('site', $element)){
+                $site = Craft::$app->sites->getSiteByHandle($element['site']);
+                if ($site){
+                    $query->siteId($site->id);
+                }
+            }
+            $entry = $query->one();
+            if ($entry) {
+                return $entry;
+            }
+        } 
+
+        return false;
+    }
+
+
+    /**
+     * @param array $element
+     *
      * @return bool|UserModel|null
      */
     public static function getUserByHandle($element)
@@ -325,7 +358,6 @@ class ElementHelper
     public static function getSourceHandle($element, BaseContentMigration $service = null)
     {
         $item = false;
-
         switch ($element->className()) {
             case 'craft\elements\Asset':
                 $item = [
@@ -384,6 +416,26 @@ class ElementHelper
     }
 
     /**
+     * @param int $elementId
+     *
+     * @return bool|BaseElementModel|null
+     * @throws Exception
+     */
+    public static function getElementHandle($element)
+    {
+        if ($element) {
+            $handle = [
+                'type' => $element->type->handle,
+                'slug' => $element->slug,
+                'title' => $element->title,
+                'site' => $element->getSite()->handle
+            ];
+            return $handle;
+        }
+        return false;
+    }
+
+    /**
      * @param $value - array of importing typed elements to find database elements for
      * @return array - an array element ids
      */
@@ -429,4 +481,55 @@ class ElementHelper
         return $ids;
     }
 
+    /**
+     * @param $handle - the handle to find an element for
+     * @return object - the matching element
+     */
+
+     public static function getElementByHandle($handle)
+     {
+        Craft::error('getElementByHandle: ' , __METHOD__);
+        if (is_array($handle) && key_exists('elementType', $handle)) {
+            $elementType = str_replace('/', '\\', $handle['elementType']);
+            Craft::error('elementtype ' . $elementType, __METHOD__);
+            $func = null;
+
+            switch ($elementType) {
+                case 'craft\elements\Asset':
+                    $func = 'dgrigg\migrationassistant\helpers\ElementHelper::getAssetByHandle';
+                    break;
+                case 'craft\elements\Category':
+                    $func = 'dgrigg\migrationassistant\helpers\ElementHelper::getCategoryByHandle';
+                    break;
+                case 'craft\elements\Entry':                        
+                    $func = 'dgrigg\migrationassistant\helpers\ElementHelper::getEntryByHandle';
+                    break;
+                case 'craft\elements\Tag':
+                    $func = 'dgrigg\migrationassistant\helpers\ElementHelper::getTagByHandle';
+                    break;
+                case 'craft\elements\User':
+                    $func = 'dgrigg\migrationassistant\helpers\ElementHelper::getUserByHandle';
+                    break;
+                default:
+                    break;
+            }
+          
+
+            if ($func){
+                $item = $func( $handle ); 
+                Craft::error('found',__METHOD__);   
+                        
+                if ($item)
+                {
+                    Craft::error($item, __METHOD__);      
+                    return $item;
+                }
+            }
+        }
+        Craft::error('no element found', __METHOD__);
+
+ 
+         return false;
+    }
+ 
 }
