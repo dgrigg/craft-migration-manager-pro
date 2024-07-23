@@ -443,37 +443,10 @@ class ElementHelper
     public static function populateIds(&$value)
     {
         $ids = [];
-        foreach ($value as &$element) {
-            if (is_array($element) && key_exists('elementType', $element)) {
-                $elementType = str_replace('/', '\\', $element['elementType']);
-                $func = null;
-                switch ($elementType) {
-                    case 'craft\elements\Asset':
-                        $func = 'dgrigg\migrationassistant\helpers\ElementHelper::getAssetByHandle';
-                        break;
-                    case 'craft\elements\Category':
-                        $func = 'dgrigg\migrationassistant\helpers\ElementHelper::getCategoryByHandle';
-                        break;
-                    case 'craft\elements\Entry':                        
-                        $func = 'dgrigg\migrationassistant\helpers\ElementHelper::getEntryByHandle';
-                        break;
-                    case 'craft\elements\Tag':
-                        $func = 'dgrigg\migrationassistant\helpers\ElementHelper::getTagByHandle';
-                        break;
-                    case 'craft\elements\User':
-                        $func = 'dgrigg\migrationassistant\helpers\ElementHelper::getUserByHandle';
-                        break;
-                    default:
-                        break;
-                }
-
-                if ($func){
-                    $item = $func( $element );                  
-                    if ($item)
-                    {
-                        $ids[] = $item->id;
-                    }
-                }
+        foreach ($value as &$handle) {
+            $element = ElementHelper::getElementByHandle($handle);
+            if ($element){
+                $ids[] = $element->id;
             }
         }
 
@@ -488,10 +461,8 @@ class ElementHelper
 
      public static function getElementByHandle($handle)
      {
-        Craft::error('getElementByHandle: ' , __METHOD__);
         if (is_array($handle) && key_exists('elementType', $handle)) {
             $elementType = str_replace('/', '\\', $handle['elementType']);
-            Craft::error('elementtype ' . $elementType, __METHOD__);
             $func = null;
 
             switch ($elementType) {
@@ -513,23 +484,17 @@ class ElementHelper
                 default:
                     break;
             }
-          
 
             if ($func){
                 $item = $func( $handle ); 
-                Craft::error('found',__METHOD__);   
-                        
+                       
                 if ($item)
                 {
-                    Craft::error($item, __METHOD__);      
                     return $item;
                 }
             }
         }
-        Craft::error('no element found', __METHOD__);
-
- 
-         return false;
+        return false;
     }
  
 }
