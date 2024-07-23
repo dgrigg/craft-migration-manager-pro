@@ -131,10 +131,14 @@ class CKFieldExtension
                         //replace the linked elements with handles                          
                         $pattern = "/{(element):({.+?})}/";
                         $html = preg_replace_callback($pattern, function($matches){
-                            $handle = json_decode($matches[2], true);                                
+                            $handle = json_decode($matches[2], true);   
                             $element = ElementHelper::getElementByHandle($handle);
                             //convert link format to {entry:{entryId}@{siteId}:url||{url}}
-                            $value = "{{$element::lowerDisplayName()}:{$element->id}@{$element->site->id}:url||{$element->url}}";
+                            if ($element){
+                                $value = "{{$element::lowerDisplayName()}:{$element->id}@{$element->site->id}:url||{$element->url}}";
+                            } else {
+                                $value = "";
+                            }
                             return $value;
                         }, $chunk['rawHtml']);
                         $content[] = $html; 

@@ -8,6 +8,7 @@ use dgrigg\migrationassistant\events\ImportEvent;
 use Craft;
 use craft\fields\BaseOptionsField;
 use craft\fields\BaseRelationField;
+use craft\helpers\MoneyHelper;
 
 abstract class BaseContentMigration extends BaseMigration
 {
@@ -93,6 +94,12 @@ abstract class BaseContentMigration extends BaseMigration
             case 'craft\fields\Color':
                 $value = (string)$value;
                 break;
+            case 'craft\fields\Money':
+                $value = [
+                    'value' => $value->getAmount(),
+                    'currency' => $value->getCurrency()
+                ];       
+                break;
             case 'craft\fields\Addresses':
                 $addresses = $field->serializeValue($value, $parent );
                 $value = array_values($addresses);
@@ -116,11 +123,11 @@ abstract class BaseContentMigration extends BaseMigration
         }
 
         if (is_object($value)) {
-            $value->context = $field->context; 
-        } else{
-            $value['context'] = $field->context; 
+            $value = (array) $value;
         }
 
+        $value['context'] = $field->context; 
+        
         //set the field context              
         $content[$field->handle] = $value;
     }

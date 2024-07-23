@@ -36,7 +36,8 @@ class UsersContent extends BaseContentMigration
                 'admin',
                 'username',
                 'email',
-                'fullName'
+                'fullName',
+                'uid'
             ];
             $attributes = $user->getAttributes();
 
@@ -74,6 +75,7 @@ class UsersContent extends BaseContentMigration
 
         if ($user) {
             $data['id'] = $user->id;
+            $data['uid'] = $user->uid;
             $userState['active'] = $user->active;
             $userState['pending'] = $user->pending;
             $userState['locked'] = $user->locked;
@@ -88,11 +90,12 @@ class UsersContent extends BaseContentMigration
             }
         }
 
-        $this->validateImportValues($data, $user->id);
+        $fields = array_key_exists('fields', $data) ? $data['fields'] : [];
 
-        if (array_key_exists('fields', $data)) {
-            $user->setFieldValues($data['fields']);
-        }
+        $this->validateImportValues($fields, $user->id);
+
+        $user->setFieldValues($fields);
+        
 
         $event = $this->onBeforeImport($user, $data);
         if ($event->isValid) {
@@ -142,6 +145,10 @@ class UsersContent extends BaseContentMigration
         if (array_key_exists('id', $data)) {
             $user->id = $data['id'];
         }
+
+        if (array_key_exists('uid', $data)) {
+            $user->uid = $data['uid'];
+        } 
 
         $user->setAttributes($data);
 

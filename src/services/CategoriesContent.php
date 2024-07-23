@@ -86,11 +86,9 @@ class CategoriesContent extends BaseContentMigration
             }
 
             $category = $this->createModel($value);
-            $this->validateImportValues($value, $category->id);
-
-            if (key_exists('fields', $value)) {
-               $category->setFieldValues($value['fields']);
-            }
+            $fields = array_key_exists('fields', $value) ? $value['fields'] : [];
+            $this->validateImportValues($fields, $category->id);
+            $category->setFieldValues($fields);
 
             $event = $this->onBeforeImport($category, $value);
             if ($event->isValid) {
