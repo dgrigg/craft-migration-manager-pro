@@ -1,4 +1,4 @@
-# Migration Assistant for [Craft CMS 4](https://craftcms.com/)
+# Migration Assistant for [Craft CMS 5](https://craftcms.com/)
 
 
 Create content migrations to easily move content between CraftCMS website installations. You can select which elements (entries, categories, users, globals) to migrate and create a native Craft content migration file that can be committed to your version control system. The migration(s) can then be applied on different CraftCMS installations to instantly create and update content, without needing to enter data multiple times. By using migrations you can ensure your various website environments (local, staging, production, etc.) stay in sync and up to date.
