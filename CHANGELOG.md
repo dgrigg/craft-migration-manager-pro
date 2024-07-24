@@ -1,10 +1,11 @@
 # Migration Assistant Changelog
 
-## 5.0.0 - 2024-07-17
+## 5.0.0 - 2024-07-24
 
 ### Added
 
 - Craft 5 support
+- CK Editor field support
 
 ## 4.0.1 - 2024-07-16 
 

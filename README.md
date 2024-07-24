@@ -67,22 +67,28 @@ You can run the migrations in a variety of ways. The two standard Craft ways are
 ## Field support
 
 Migration Assistant currently supports all core CraftCMS fields types:
+
+- Addresses
 - Assets
 - Categories
 - Checkboxes
 - Color
-- Date/Time
+- Country
+- Date
 - Dropdown
+- Email
 - Entries
+- Icon
 - Lightswitch
 - Matrix
+- Money
 - Multi-select
 - Number
 - Plain Text
 - Radio Buttons
-- Rich Text
 - Table
 - Tags
+- Time
 - Url
 - Users
 
@@ -92,6 +98,8 @@ In addition it also supports:
 - [Neo](https://github.com/spicywebau/craft-neo)
 - [LinkField](https://github.com/sebastian-lenz/craft-linkfield)
 - [Hyper](https://github.com/verbb/hyper)
+- [Hyper](https://github.com/verbb/hyper)
+- [CK Editor](https://github.com/craftcms/ckeditor)
 
 ### Additional Field Support
 
@@ -110,7 +118,6 @@ During the export event you can modify the \$event->value data to include any ad
 
     @event ExportEvent - Triggered before an element is exported
     const EVENT_BEFORE_EXPORT_ELEMENT = 'beforeExport';
-
     
     @event ExportEvent - Triggered before an element field value is exported
     const EVENT_BEFORE_EXPORT_FIELD_VALUE = 'beforeExportFieldValue';
@@ -191,7 +198,7 @@ To learn more about creating custom migrations:
 
 ## Upgrading from Migration Assistant 3 
 
-Migration Assistant 4 no longer includes migration support for fields, sections, settings, etc. Craft's core project config setup is a better mechanism for syncing Craft structure/settings across environments. Please note that migrations generated in Migration Assistant 3 will not work in Migration Assistant 4 due to changes in core Craft elements.
+Migration Assistant no longer includes migration support for fields, sections, settings, etc. Craft's core project config setup is a better mechanism for syncing Craft structure/settings across environments. Please note that migrations need to be generated and executed in the same Craft major versions due to changes in core Craft elements and services.
 
 #### Credits
 
